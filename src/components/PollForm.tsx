@@ -25,21 +25,21 @@ const PollForm = ({
   const [options, setOptions] = useState(initialOptions);
   const { createPoll, updatePoll } = usePolls();
 
-  // Fix: Only update state when props change, not on every render
+  // Only update state from props when component mounts or props actually change
   useEffect(() => {
-    // Only update if the values actually changed to prevent infinite loops
     if (initialQuestion !== question) {
       setQuestion(initialQuestion);
     }
     
-    // Compare arrays by their contents rather than reference
-    const optionsChanged = initialOptions.length !== options.length || 
+    // Check if options array has actually changed
+    const optionsChanged = 
+      initialOptions.length !== options.length || 
       initialOptions.some((opt, index) => options[index] !== opt);
     
     if (optionsChanged) {
-      setOptions(initialOptions);
+      setOptions([...initialOptions]);
     }
-  }, [initialQuestion, initialOptions]);
+  }, [initialQuestion, initialOptions]); // Remove options and question from dependency array
 
   const addOption = () => {
     setOptions([...options, ""]);
